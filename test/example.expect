@@ -1,0 +1,25 @@
+Usage: example.sh [-h|--help] | { [-n|--nan <NUMBER>]
+                                  [-l|--list-dir <DIRECTORY>]
+                                  <ARGUMENT 1> [<ARG 2... }
+
+ This is a tool for a  specific purpose. We suggest to describe the
+ overall idea behind the tool here in the first section.
+
+ We can also add additional notes in a later section, before moving
+ on to describing the available options.
+
+  -h, --help
+         Display this helpful usage information
+
+  -n, --nan <NUMBER>
+         Say NaN this many times. (Default value: '20'.)
+
+  -l, --list-dir <DIRECTORY>
+         List the contents of given directory.
+         (Default value: '/proc'.)
+
+  <ARGUMENT #>
+         Print out each argument at the end of the script. At least
+         one argument is required.
+
+Blame (most) bugs on: Martin Kjellstrand <martin.kjellstrand@madworx.se>.
