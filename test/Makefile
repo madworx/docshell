@@ -1,11 +1,15 @@
+OS := ${OS}
+DIR := ${DIR}
+
 all:	tests
 
 tests:
-	export FN="tests-results-`date +%Y%m%d-%H%M%S`" ; \
-	./test-all.sh > "$${FN}.log" && \
-	./process-test-results.sh < "$${FN}.log" > "$${FN}.tap" && \
-	./generate-compat-report.pl "$${FN}.tap" > "$${FN}.report"
+	./test-all.sh $(OS) | \
+	./process-test-results.pl 
+
+generate-report:
+	cat ${DIR}/*.tap > .tap
+	./generate-compat-report.pl .tap
 
 clean:
 	rm -f *~
-

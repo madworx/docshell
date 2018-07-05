@@ -1,0 +1,54 @@
+language: perl
+
+env:
+  global:
+    - PATH=$HOME/.local/bin:$PATH
+    
+perl:
+  - "5.22"
+
+sudo: required
+
+before_install:
+  - pip install --user awscli
+  - mkdir -p ~/$TRAVIS_BUILD_NUMBER
+  - aws s3 sync s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
+  
+install:
+  - cpanm --quiet --installdeps --notest ./test
+  - cd test
+
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: Test shells
+      env: OS=netbsd
+      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+    -
+      env: OS=debian
+      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+    -
+      env: OS=ubuntu
+      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+    -
+      env: OS=centos
+      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+    -
+      env: OS=opensuse
+      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+    -
+      env: OS=alpine
+      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+    -
+      env: OS=bash
+      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+    - stage: Generate report
+      script:
+         - export DIR=~/$TRAVIS_BUILD_NUMBER ; ./publish-report.sh 
+      after_success:
+         - aws s3 rm --recursive s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
+
+after_success:
+  - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER

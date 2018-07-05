@@ -1,0 +1,5 @@
+requires 'TAP::Parser';
+requires 'Text::FormatTable';
+requires 'Text::Diff';
+requires 'Sort::Key::Natural';
+

@@ -1,11 +1,10 @@
-#! /usr/bin/perl
+#!/usr/bin/env perl
 
 use utf8;
 use TAP::Parser;
 use Data::Dumper;
 use Scalar::Util qw(blessed);
 use Sort::Key::Natural qw(natsort);
-#use Text::Table::Tiny 0.04 qw/ generate_table /;
 use Text::FormatTable;
 use List::Util qw(max);
 
@@ -104,6 +103,6 @@ foreach my $os_category ( natsort keys %oses ) {
         $table->row( @{$_} );
     }
     $tabtxt = $table->render();
-    ($tabmd = $tabtxt) =~ s/-[+]-/-|-/g;
+    ($tabmd = $tabtxt) =~ s/(^|-)[+](-|$)/$1|$2/msg;
     print $tabmd."\n\n";
 }

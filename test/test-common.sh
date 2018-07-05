@@ -73,8 +73,7 @@ setup_debian() {
 
     # Perform best-effort update of package list.
     apt-get update >/dev/null 2>&1 || true
-    
-    
+
     shell_install() {
         apt-get -q install --force-yes -y "$1" >/dev/null 2>&1
     }
