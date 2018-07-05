@@ -1,11 +1,22 @@
 language: perl
 
 env:
+  matrix:
+    - OS=netbsd
+    - OS=debian
+    - OS=ubuntu
+    - OS=centos
+    - OS=opensuse
+    - OS=alpine
+    - OS=bash
   global:
     - PATH=$HOME/.local/bin:$PATH
     
 perl:
   - "5.22"
+
+services:
+  - docker
 
 sudo: required
 
@@ -18,32 +29,10 @@ install:
   - cpanm --quiet --installdeps --notest ./test
   - cd test
 
-services:
-  - docker
+script: script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
 
 jobs:
   include:
-    - stage: Test shells
-      env: OS=netbsd
-      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
-    -
-      env: OS=debian
-      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
-    -
-      env: OS=ubuntu
-      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
-    -
-      env: OS=centos
-      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
-    -
-      env: OS=opensuse
-      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
-    -
-      env: OS=alpine
-      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
-    -
-      env: OS=bash
-      script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
     - stage: Generate report
       script:
          - export DIR=~/$TRAVIS_BUILD_NUMBER ; ./publish-report.sh 
