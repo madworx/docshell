@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/madworx/docshell.svg?branch=master)](https://travis-ci.org/madworx/docshell)
+
 # docshell
 A  novel  approach  to  documenting  command  line  tools  written  in
 shell-script.
@@ -43,6 +45,14 @@ Also, by  attempting to produce  good looking --help  output, combined
 with dynamic  features (such as  default value variable  expansion) we
 further hope  that the  developer in  question will  see the  point in
 keeping the documentation always-up-to-date.
+
+## Compatability
+
+Compatability   with  various   shells  and   operating  systems   are
+automatically tested and  reports are published on  the following Wiki
+page:
+
+* [Compatibility matrix](https://github.com/madworx/docshell/wiki/Compatibility-matrix)
 
 ## Further reading
 
