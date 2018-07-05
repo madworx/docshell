@@ -15,10 +15,10 @@ env:
 perl:
   - "5.22"
 
+sudo: required
+
 services:
   - docker
-
-sudo: required
 
 before_install:
   - pip install --user awscli
@@ -29,15 +29,16 @@ install:
   - cpanm --quiet --installdeps --notest ./test
   - cd test
 
-script: script: make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+script:
+  - make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
 
 jobs:
   include:
     - stage: Generate report
       script:
-         - export DIR=~/$TRAVIS_BUILD_NUMBER ; ./publish-report.sh 
+        - export DIR=~/$TRAVIS_BUILD_NUMBER ; ./publish-report.sh 
       after_success:
-         - aws s3 rm --recursive s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
+        - aws s3 rm --recursive s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
 
 after_success:
   - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
