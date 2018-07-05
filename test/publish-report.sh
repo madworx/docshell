@@ -17,7 +17,7 @@ if [ "${TRAVIS_BRANCH}" == "master" ] ; then
     make -s generate-report DIR=$DIR > "${TMPDR}/Compatibility-matrix.md"
     cd "${TMPDR}"
     
-    git commit -m 'Automated generation of compatability matrix' Compatibility-matrix.md Home.md
+    git commit -m 'Automated generation of compatability matrix' Compatibility-matrix.md Home.md || exit 0
     git push
 else
     echo "Not on \`master' branch - not publishing, only printing."
