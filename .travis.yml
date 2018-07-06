@@ -35,8 +35,9 @@ script:
 jobs:
   include:
     - stage: Generate report
+      env: OS
       script:
-        - export DIR=~/$TRAVIS_BUILD_NUMBER ; ./publish-report.sh 
+        - export DIR=~/$TRAVIS_BUILD_NUMBER ; ./publish-report.sh
       after_success:
         - aws s3 rm --recursive s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
 

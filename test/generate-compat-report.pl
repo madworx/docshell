@@ -43,6 +43,16 @@ my %os_name_trans = (
     "Ubuntu Bionic"           => [ "Ubuntu 18.04 LTS (Bionic)", ],
     );
 
+my %os_category_desc = (
+    "Alpine Linux" => "",
+    "Bash"         => "Multiple versions of the \`bash\` shell, compiled and run on [debian/buster](https://wiki.debian.org/DebianBuster).",
+    "CentOS"       => "",
+    "Debian"       => "[Current](https://www.debian.org/releases/) and [old/archived](https://hub.docker.com/r/madworx/debian-archive/) versions of the Debian GNU/Linux operating system.",
+    "NetBSD"       => "The [NetBSD](http://www.netbsd.org) operating system, using the (madworx/netbsd)[https://hub.docker.com/r/madworx/netbsd/] docker images.",
+    "OpenSUSE"     => "",
+    "Ubuntu"       => "",
+    );
+
 my $parser = TAP::Parser->new( { source => $ARGV[0] } );
 
 my %shells;
@@ -70,6 +80,10 @@ while ( my $result = $parser->next ) {
 
 my @out;
 print "# Shell and operating system compatability report\n\n";
+($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+($commit = "[".`git describe --tags --always`."](https://github.com/madworx/docshell/commit/".`git log --format="%H" -n 1`.").") =~ s/\n//msg;
+printf("This report was generated at %04d-%02d-%02d %02d:%02d:%02d, from git commit %s\n\n", 1900+$year,$mon+1,$mday,$hour, $min, $sec,$commit);
+
 foreach my $os_category ( natsort keys %oses ) {
     @oses   = reverse natsort( keys %{$oses{$os_category}} );
     @shells = natsort( keys %{$shells{$os_category}} );
@@ -96,6 +110,8 @@ foreach my $os_category ( natsort keys %oses ) {
     $fmtstr = '| '.$osnlen."l |"." l |"x(scalar @header - 1);
 
     print "## ".$os_category."\n";
+    print $os_category_desc{$os_category}."\n" if $os_category_desc{$os_category};
+    print "\n";
     my $table = Text::FormatTable->new( $fmtstr );
     $table->head(@header);
     $table->rule('-');
@@ -104,5 +120,5 @@ foreach my $os_category ( natsort keys %oses ) {
     }
     $tabtxt = $table->render();
     ($tabmd = $tabtxt) =~ s/(^|-)[+](-|$)/$1|$2/msg;
-    print $tabmd."\n\n";
+    print $tabmd."\n\n\n";
 }
