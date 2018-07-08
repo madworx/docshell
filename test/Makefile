@@ -3,7 +3,10 @@ DIR := ${DIR}
 
 all:	tests
 
-tests:
+check:
+	shellcheck -s ksh *.sh
+
+tests: check
 	./test-all.sh $(OS) | \
 	./process-test-results.pl 
 

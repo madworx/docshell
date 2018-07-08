@@ -5,6 +5,7 @@ identify_os() {
     case "${IMG}" in
         madworx/debian-archive:*) I=setup_archived_debian  ;;
         madworx/netbsd:*)         I=setup_netbsd           ;;
+        madworx/multibash)        I=setup_multibash        ;;
         opensuse/*)               I=setup_opensuse         ;;
         debian:*)                 I=setup_debian           ;;
         ubuntu:*)                 I=setup_debian           ;;
@@ -25,6 +26,9 @@ _setup_base() {
     os_release() {
         echo "${OS_RELEASE}"
     }
+    volume_prefix() {
+        echo ""
+    }
 }
 
 setup_netbsd() {
@@ -32,12 +36,17 @@ setup_netbsd() {
     _setup_base "${IMG%:*}" "${IMG#*:}"
 
     shell_install() {
+        # shellcheck disable=SC1091
         . /etc/profile
         /usr/sbin/pkg_add "${SHL}" >/dev/null 2>&1 || return 1
     }
     shell_version() {
+        # shellcheck disable=SC1091
         . /etc/profile
         /usr/sbin/pkg_info -X "${SHL}" | sed -n "s#^PKGNAME=##p" | sed "s#.*-##"
+    }
+    volume_prefix() {
+        echo "/bsd"
     }
 }
 
@@ -58,19 +67,17 @@ setup_opensuse() {
     _setup_base "${1%/*}" "${1#*/}"
 
     shell_install() {
-        ! zypper info ${SHL} 2>&1 | egrep -q '^package.*not found' && zypper install -y ${SHL} >/dev/null 2>&1
+        ! zypper info "${SHL}" 2>&1 | grep -Eq '^package.*not found' && \
+            zypper install -y "${SHL}" >/dev/null 2>&1
     }
     shell_version() {
         zypper info "${SHL}" | awk -F' *: *' '$1=="Version"{print $2}'
     }
-
 }
 
 setup_debian() {
     _setup_base "${1%:*}" "${1#*:}"
     
-    which dpkg >/dev/null 2>&1 || return 1
-
     # Perform best-effort update of package list.
     apt-get update >/dev/null 2>&1 || true
 
@@ -87,7 +94,6 @@ setup_archived_debian() {
     setup_debian "debian${1#madworx/debian-archive}"
 }
 
-
 setup_centos() {
     _setup_base "${1%:*}" "${1#*:}"
     
@@ -98,4 +104,20 @@ setup_centos() {
         yum info "$1" | awk -F' *: *' '$1=="Release"{print $2}'
     }
     
+}
+
+setup_multibash() {
+    _setup_base bash multi
+
+    SHELLS=""
+    for F in /usr/local/bin/bash-* ; do
+        SHELLS="${SHELLS} $(basename "${F}")"
+    done
+    
+    shell_install() {
+        true
+    }
+    shell_version() {
+        echo "${1#*-}"
+    }
 }

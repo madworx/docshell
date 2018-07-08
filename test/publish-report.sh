@@ -18,7 +18,7 @@ if [ "${TRAVIS_BRANCH}" == "master" ] ; then
     echo "Git id: $(git describe --tags --always)"
 
     cp ../README.md "${TMPDR}/Home.md"
-    make -s generate-report DIR=$DIR > "${TMPDR}/Compatibility-matrix.md"
+    make -s generate-report DIR="${DIR}" > "${TMPDR}/Compatibility-matrix.md"
 
     cd "${TMPDR}"    
     git commit -m 'Automated generation of compatability matrix' Compatibility-matrix.md Home.md || exit 0
@@ -28,5 +28,5 @@ else
     echo "Available environment:"
     set
     echo "Git id: $(git describe --tags --always)"
-    make -s generate-report DIR=$DIR
+    make -s generate-report DIR="${DIR}"
 fi
