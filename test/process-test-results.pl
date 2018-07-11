@@ -1,18 +1,24 @@
 #!/usr/bin/env perl
 
+use strict;
+use warnings;
+
 use Text::Diff;
 
-$/="\n\n";
+local $/="\n\n";
+
+my $str;
+my @results = ();
 
 while( <> ) {
     chomp;
     s/\r//g;
     @_ = split /\n/;
     next if $_[0] =~ /^Testing/;
-    ( $exit_code, $os, $shell ) = split( / /, $_[0] );
+    my ( $exit_code, $os, $shell ) = split( / /, $_[0] );
 
     shift @_;
-    $command_output = join("\n",@_);
+    my $command_output = join("\n",@_);
     $command_output =~ s/^# //msg;
 
     if ( $exit_code == 0 ) {

@@ -1,5 +1,8 @@
 #!/usr/bin/env perl
 
+use strict;
+use warnings;
+
 use utf8;
 use TAP::Parser;
 use Data::Dumper;
@@ -20,8 +23,8 @@ my %os_trans = (
     );
 
 my %os_ver_trans = (
-    "-slim\$"                 => "",
-    "-x86_64\$"               => "",
+    "-slim\$"                 => "''",
+    "-x86_64\$"               => "''",
     "^([a-z])"                => "ucfirst(\$1)",
     );
 
@@ -44,13 +47,13 @@ my %os_name_trans = (
     );
 
 my %os_category_desc = (
-    "Alpine Linux" => "",
+    "Alpine Linux" => "Alpine",
     "Bash"         => "Multiple versions of the \`bash\` shell, compiled and run on [debian/buster](https://wiki.debian.org/DebianBuster).",
-    "CentOS"       => "",
+    "CentOS"       => "CentOS",
     "Debian"       => "[Current](https://www.debian.org/releases/) and [old/archived](https://hub.docker.com/r/madworx/debian-archive/) versions of the Debian GNU/Linux operating system.",
-    "NetBSD"       => "The [NetBSD](http://www.netbsd.org) operating system, using the (madworx/netbsd)[https://hub.docker.com/r/madworx/netbsd/] docker images.",
-    "OpenSUSE"     => "",
-    "Ubuntu"       => "",
+    "NetBSD"       => "The [NetBSD](http://www.netbsd.org) operating system, using the [madworx/netbsd](https://hub.docker.com/r/madworx/netbsd/) docker images.",
+    "OpenSUSE"     => "OpenSUSE",
+    "Ubuntu"       => "Ubuntu",
     );
 
 my $parser = TAP::Parser->new( { source => $ARGV[0] } );
@@ -62,14 +65,14 @@ while ( my $result = $parser->next ) {
     if ( blessed $result eq 'TAP::Parser::Result::Test' ) {
         my ( $os_category, $os_version, $shell, $shell_version) = ($result->description =~ /([^:]+):([^ ]+) ([^:]+):(.*)/);
 
-        while (($key, $value) = each (%os_trans)) {
+        while ( my ($key, $value) = each (%os_trans)) {
             $os_category =~ s/$key/$value/ee;
         }
-        while (($key, $value) = each (%os_ver_trans)) {
+        while ( my ($key, $value) = each (%os_ver_trans)) {
             $os_version =~ s/$key/$value/ee;
         }
-        $osdescr = $os_category." ".$os_version;
-        while (($key, $value) = each (%os_name_trans)) {
+        my $osdescr = $os_category." ".$os_version;
+        while ( my ($key, $value) = each (%os_name_trans)) {
             $osdescr =~ s/$key/$value->[0]/e;
         }
 
@@ -80,19 +83,20 @@ while ( my $result = $parser->next ) {
 
 my @out;
 print "# Shell and operating system compatability report\n\n";
-($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+my $commit;
 ($commit = "[".`git describe --tags --always`."](https://github.com/madworx/docshell/commit/".`git log --format="%H" -n 1`.").") =~ s/\n//msg;
 printf("This report was generated at %04d-%02d-%02d %02d:%02d:%02d, from git commit %s\n\n", 1900+$year,$mon+1,$mday,$hour, $min, $sec,$commit);
 
 foreach my $os_category ( natsort keys %oses ) {
-    @oses   = reverse natsort( keys %{$oses{$os_category}} );
-    @shells = natsort( keys %{$shells{$os_category}} );
+    my @oses   = reverse natsort( keys %{$oses{$os_category}} );
+    my @shells = natsort( keys %{$shells{$os_category}} );
     my @header = ( "Operating system", @shells );
     my @out = ();
     foreach my $os ( @oses ) {
         my @row = ($os);
         foreach my $shell ( @shells ) {
-            $str = "";
+            my $str = "";
             foreach my $testedversion( reverse natsort keys %{$oses{$os_category}{$os}{$shell}} ) {
                 if ( $oses{$os_category}{$os}{$shell}{$testedversion} eq 'ok' ) {
                     $str .= "\x{2713}";
@@ -106,8 +110,8 @@ foreach my $os_category ( natsort keys %oses ) {
         }
         push( @out, [ @row ] );
     }
-    $osnlen = (max map { length } ( @oses, $header[0] ));
-    $fmtstr = '| '.$osnlen."l |"." l |"x(scalar @header - 1);
+    my $osnlen = (max map { length } ( @oses, $header[0] ));
+    my $fmtstr = '| '.$osnlen."l |"." l |"x(scalar @header - 1);
 
     print "## ".$os_category."\n";
     print $os_category_desc{$os_category}."\n" if $os_category_desc{$os_category};
@@ -118,7 +122,8 @@ foreach my $os_category ( natsort keys %oses ) {
     foreach( @out ) {
         $table->row( @{$_} );
     }
-    $tabtxt = $table->render();
+    my $tabtxt = $table->render();
+    my $tabmd;
     ($tabmd = $tabtxt) =~ s/(^|-)[+](-|$)/$1|$2/msg;
     print $tabmd."\n\n\n";
 }

@@ -4,7 +4,9 @@ DIR := ${DIR}
 all:	tests
 
 check:
-	shellcheck -s ksh *.sh
+	shellcheck -s ksh *.sh 
+	perl -Mstrict -cw *.pl > /dev/null 
+	perlcritic *.pl > /dev/null
 
 tests: check
 	./test-all.sh $(OS) | \

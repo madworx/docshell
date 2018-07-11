@@ -3,8 +3,8 @@ language: perl
 env:
   matrix:
     - OS=netbsd
-    - OS=debian
     - OS=ubuntu
+    - OS=debian
     - OS=centos
     - OS=opensuse
     - OS=alpine
