@@ -26,9 +26,6 @@ _setup_base() {
     os_release() {
         echo "${OS_RELEASE}"
     }
-    volume_prefix() {
-        echo ""
-    }
 }
 
 setup_netbsd() {
@@ -44,9 +41,6 @@ setup_netbsd() {
         # shellcheck disable=SC1091
         . /etc/profile
         /usr/sbin/pkg_info -X "${SHL}" | sed -n "s#^PKGNAME=##p" | sed "s#.*-##"
-    }
-    volume_prefix() {
-        echo "/bsd"
     }
 }
 

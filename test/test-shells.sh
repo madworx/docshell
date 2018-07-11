@@ -18,7 +18,8 @@ identify_os "${SUGGESTED_OS}"
 for SHL in ${SHELLS} ; do
     shell_install "${SHL}" && (
         EXIT_CODE=0
-        "${SHL}" /docshell/example.sh "${ARGS[@]}" \
+        # shellcheck disable=SC2086
+        "${SHL}" /docshell/example.sh ${ARGS} \
                  > /tmp/tmp.output 2>&1 \
             || EXIT_CODE=$? && true
         echo "${EXIT_CODE} $(os_name):$(os_release) ${SHL%%-*}:$(shell_version "${SHL}")"
