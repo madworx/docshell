@@ -52,14 +52,14 @@ while [ "$#" -gt 0 ] ; do
         -h|--help) usage ; exit 0 ;;
         -n|--nan) NAN_COUNT="$2" ; shift 2 ;;
         -l|--list-dir) DIR="$2" ; shift 2 ;;
-        -*) echo "Error: Unknown option '$1'." 1>&2 ; usage ; exit 1 ;;
+        -*) echo "Error: Unknown option '$1'." 1>&2 ; usage ; exit 64 ;; # EX_USAGE
         *) REST="${REST} $1" ; shift ;
     esac
 done
 
 # ----- YOUR APPLICATION CODE GOES HERE -----
 
-[ -z "${REST}" ] && usage && exit 1
+[ -z "${REST}" ] && usage && exit 64 # EX_USAGE
 
 # Our application code:
 for N in $(seq 1 ${NAN_COUNT}) ; do

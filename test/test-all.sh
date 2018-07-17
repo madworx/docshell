@@ -8,11 +8,20 @@ for VER in madworx/debian-archive:{etch,lenny,squeeze} \
            debian:{buster,jessie,sid,stretch,wheezy}-slim \
            ubuntu:{artful,bionic,trusty,xenial,zesty,yakkety,precise} \
            centos:{6,7} \
-           opensuse/{leap,tumbleweed} ; do
+           opensuse/{leap,tumbleweed} \
+           madworx/netbsd:{7.1.2,6.1.5}-x86_64 ; do
     if [[ "${VER}" = *${REQUESTED}* ]] ; then
         echo "Testing image ${VER}" 1>&2
+
+        PP=""
+        # The  madworx/netbsd images  needs to  have the  volume mount
+        # prefixed by /bsd.
+        if [[ "${VER}" = madworx/netbsd:* ]] ; then
+            PP="/bsd"
+        fi
+
         docker run --rm \
-               -v "$(dirname "$(readlink -f "$0")")/..:/docshell" \
+               -v "$(dirname "$(readlink -f "$0")")/..:${PP}/docshell" \
                -i \
                -e VER \
                "${VER}" \
@@ -31,18 +40,5 @@ for VER in alpine:3.{1,2,3,4,5,6,7,8} alpine:edge ; do
                /bin/sh -c "apk update >/dev/null 2>&1 ; \
                            apk add bash >/dev/null 2>&1 ; \
                            /docshell/test/test-shells.sh \"${VER}\""
-    fi
-done
-
-# Test NetBSD, we need a prefix to the volume mount:
-for VER in madworx/netbsd:{7.1.2,6.1.5}-x86_64 ; do
-    if [[ "${VER}" = *${REQUESTED}* ]] ; then
-        echo "Testing image ${VER}" 1>&2
-        docker run --privileged --rm \
-               -v "$(dirname "$(readlink -f "$0")")/..:/bsd/docshell" \
-               -i \
-               -e VER \
-               "${VER}" \
-               /docshell/test/test-shells.sh "${VER}"
     fi
 done
