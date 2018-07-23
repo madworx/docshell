@@ -7,6 +7,7 @@ set -x
 # shellcheck disable=SC1090
 source <(curl https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash)
 
+# shellcheck disable=SC2015
 is_travis_master_push && (
     echo "Push event on \`master' branch. Publishing to Wiki"
 
@@ -15,7 +16,7 @@ is_travis_master_push && (
     make -s generate-report DIR="${DIR}" > "${TMPDR}/Compatibility-matrix.md"
     github_wiki_commit "${TMPDR}"
     exit 0
+) || (
+    echo "Not on \`master' branch - not publishing, only printing."
+    make -s generate-report DIR="${DIR}"
 )
-
-echo "Not on \`master' branch - not publishing, only printing."
-make -s generate-report DIR="${DIR}"

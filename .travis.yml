@@ -3,6 +3,7 @@ language: perl
 env:
   matrix:
     - OS=netbsd
+    - OS=minix
     - OS=ubuntu
     - OS=debian
     - OS=centos

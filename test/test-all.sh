@@ -42,3 +42,25 @@ for VER in alpine:3.{1,2,3,4,5,6,7,8} alpine:edge ; do
                            /docshell/test/test-shells.sh \"${VER}\""
     fi
 done
+
+#
+# Minix image currently doesn't support file system mounting, so we'll
+# do a work-around for it:
+#
+# shellcheck disable=SC2043
+for VER in madworx/minix:latest ; do
+    if [[ "${VER}" = *${REQUESTED}* ]] ; then
+        echo "Testing image ${VER}" 1>&2
+        DID=$(docker run --rm \
+                     -d \
+                     -i \
+                     -e VER "${VER}")
+        docker cp "$(dirname "$(readlink -f "$0")")/.." "${DID}:/docshell"
+        # Wait until Minix is booted:
+        docker exec -i "${DID}" sshexec true
+        docker exec -i "${DID}" scp -qr /docshell localhost:/docshell
+        docker exec -i "${DID}" ssh localhost pkgin -y install bash >/dev/null 2>&1
+        docker exec -i "${DID}" ssh localhost /docshell/test/test-shells.sh "${VER}"
+        docker stop "${DID}" >/dev/null
+    fi
+done

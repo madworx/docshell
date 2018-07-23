@@ -5,6 +5,7 @@ identify_os() {
     case "${IMG}" in
         madworx/debian-archive:*) I=setup_archived_debian  ;;
         madworx/netbsd:*)         I=setup_netbsd           ;;
+        madworx/minix:*)          I=setup_minix            ;;
         madworx/multibash)        I=setup_multibash        ;;
         opensuse/*)               I=setup_opensuse         ;;
         debian:*)                 I=setup_debian           ;;
@@ -25,6 +26,19 @@ _setup_base() {
     }
     os_release() {
         echo "${OS_RELEASE}"
+    }
+}
+
+setup_minix() {
+    IMG="minix${1#madworx/minix}"
+    _setup_base "${IMG%:*}" "$(uname -r)"
+
+    shell_install() {
+        pkgin -y install "${SHL}" >/dev/null 2>&1 || return 1
+    }
+
+    shell_version() {
+        pkgin list "${SHL}" | sed -n "s#^${SHL}-\\([^ ]*\\).*#\\1#p"
     }
 }
 
