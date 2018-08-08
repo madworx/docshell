@@ -13,8 +13,8 @@ tests: check
 	./process-test-results.pl 
 
 generate-report:
-	cat ${DIR}/*.tap > .tap
-	./generate-compat-report.pl .tap
+	cat ${DIR}/*.tap > ${DIR}/.tap
+	./generate-compat-report.pl ${DIR}/.tap
 
 clean:
 	rm -f *~
