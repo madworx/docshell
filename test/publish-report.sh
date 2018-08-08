@@ -12,8 +12,15 @@ is_travis_master_push && (
     echo "Push event on \`master' branch. Publishing to Wiki"
 
     TMPDR=$(github_wiki_prepare madworx/docshell)
-    cp ../README.md "${TMPDR}/Home.md"
+
+    # Undelete the compatability-report.tap file:
+    git reset HEAD "${TMPDR}/compatability-report.tap"
+    git checkout -- "${TMPDR}/compatability-report.tap" || touch "${TMPDR}/compatability-report.tap"
+    cp "${TMPDR}/compatability-report.tap" "${DIR}/"
     make -s generate-report DIR="${DIR}" > "${TMPDR}/Compatibility-matrix.md"
+    cp "${DIR}/.tap" "${TMPDR}/compatability-report.tap"
+    cp ../README.md "${TMPDR}/Home.md"
+
     github_wiki_commit "${TMPDR}"
     exit 0
 ) || (
