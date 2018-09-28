@@ -25,7 +25,7 @@ before_install:
   - pip install --user awscli
   - mkdir -p ~/$TRAVIS_BUILD_NUMBER
   - aws s3 sync s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
-  
+
 install:
   - cpanm --quiet --installdeps --notest ./test
   - cd test
@@ -43,4 +43,4 @@ jobs:
         - aws s3 rm --recursive s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
 
 after_success:
-  - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
+  - aws s3 sync --storage-class REDUCED_REDUNDANCY ~/$TRAVIS_BUILD_NUMBER s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
