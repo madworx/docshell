@@ -57,3 +57,7 @@ page:
 ## Further reading
 
 * https://en.wikipedia.org/wiki/Literate_programming
+
+## Author
+
+Martin Kjellstrand <martin.kjellstrand@madworx.se>
