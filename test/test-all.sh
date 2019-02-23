@@ -30,7 +30,7 @@ for VER in madworx/debian-archive:{etch,lenny,squeeze} \
 done
 
 # Test Alpine Linux, who has special needs:
-for VER in alpine:3.{1,2,3,4,5,6,7,8} alpine:edge ; do
+for VER in alpine:3.{1,2,3,4,5,6,7,8,9} alpine:edge ; do
     if [[ "${VER}" = *${REQUESTED}* ]] ; then
         echo "Testing image ${VER}" 1>&2
         docker run --rm \
