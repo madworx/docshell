@@ -19,6 +19,7 @@ my %os_trans = (
     "[mM]adworx/debian-archive" => "'Debian'",
     "[cC]entos"                 => "'CentOS'",
     "[nN]etbsd"                 => "'NetBSD'",
+    "[oO]sx"                    => "'MacOS X'",
     "^([a-z])"                  => "ucfirst(\$1)",
     );
 
@@ -54,6 +55,7 @@ my %os_category_desc = (
     "NetBSD"       => "The [NetBSD](http://www.netbsd.org) operating system, using the [madworx/netbsd](https://hub.docker.com/r/madworx/netbsd/) docker images.",
     "OpenSUSE"     => "OpenSUSE",
     "Ubuntu"       => "Ubuntu",
+    "MacOS X"      => "Apple MacOS X"
     );
 
 my $parser = TAP::Parser->new( { source => $ARGV[0] } );

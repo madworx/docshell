@@ -42,7 +42,7 @@ usage() {
     PROGPADD="$(echo "${PROGNAME}" | sed 's#.# #g')"
     export PROGPADD
     (echo "cat <<EOT"
-     sed -rn 's/^## ?//p' < "${program_path}"
+     sed -n 's/^## \{0,1\}//p' < "${program_path}"
      echo "EOT") > /tmp/.help.$$ ; . /tmp/.help.$$ ; rm /tmp/.help.$$
 }
 

@@ -2,6 +2,7 @@ language: perl
 
 env:
   matrix:
+    - OS=osx
     - OS=netbsd
     - OS=minix
     - OS=ubuntu
@@ -11,8 +12,33 @@ env:
     - OS=alpine
     - OS=bash
   global:
-    - PATH=$HOME/.local/bin:$PATH
-    
+    - PATH=${HOME}/.local/bin:${HOME}/perl5/bin:${HOME}/perl5/perlbrew/bin:$PATH
+
+matrix:
+  exclude:
+    - os: osx
+      env: OS=netbsd
+    - os: osx
+      env: OS=minix
+    - os: osx
+      env: OS=ubuntu
+    - os: osx
+      env: OS=debian
+    - os: osx
+      env: OS=centos
+    - os: osx
+      env: OS=opensuse
+    - os: osx
+      env: OS=alpine
+    - os: osx
+      env: OS=bash
+    - os: linux
+      env: OS=osx
+
+os:
+  - linux
+  - osx
+
 perl:
   - "5.22"
 
@@ -22,19 +48,30 @@ services:
   - docker
 
 before_install:
-  - pip install --user awscli
+  - sudo pip install awscli
   - mkdir -p ~/$TRAVIS_BUILD_NUMBER
   - aws s3 sync s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]] ; then PERL_MM_USE_DEFAULT=1 cpan -Tfi App::cpanminus ; fi
+  - cpanm --local-lib=~/perl5 local::lib
 
 install:
-  - cpanm --quiet --installdeps --notest ./test
+  - cpanm --quiet --force --installdeps --notest ./test
   - cd test
 
 script:
-  - make -s OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+  - make OS=${OS} > ~/$TRAVIS_BUILD_NUMBER/${OS}.tap
+
+stages:
+  - Lint and validate source
+  - Test
+  - Generate report
 
 jobs:
   include:
+    - stage: Lint and validate source
+      env: OS
+      script:
+        - make check
     - stage: Generate report
       env: OS
       script:
@@ -44,3 +81,6 @@ jobs:
 
 after_success:
   - aws s3 sync --storage-class REDUCED_REDUNDANCY ~/$TRAVIS_BUILD_NUMBER s3://madworx/docshell-build/$TRAVIS_BUILD_NUMBER
+
+after_failure:
+  - find /Users/travis/.cpanm -type f | xargs cat

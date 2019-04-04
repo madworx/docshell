@@ -12,6 +12,7 @@ identify_os() {
         ubuntu:*)                 I=setup_debian           ;;
         centos:*)                 I=setup_centos           ;;
         alpine:*)                 I=setup_alpine           ;;
+        osx:*)                    I=setup_osx              ;;
         *) echo "Unknown OS: [${IMG}]" ; exit 1 ;;
     esac
     ${I} "${IMG}"
@@ -128,4 +129,16 @@ setup_multibash() {
     shell_version() {
         echo "${1#*-}"
     }
+}
+
+setup_osx() {
+    _setup_base "osx" "$(defaults read loginwindow SystemVersionStampAsString)"
+
+    shell_install() {
+        brew install "$1" > /dev/null 2>&1
+    }
+    shell_version() {
+        brew list --versions "$1" | sed -n "s# #:#gp" 2>/dev/null
+    }
+
 }

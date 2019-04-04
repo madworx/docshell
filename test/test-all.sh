@@ -2,6 +2,8 @@
 
 REQUESTED="${1:-}"
 
+HAS_RUN=0
+
 # Test "regular" docker image-based OS distributions:
 for VER in madworx/debian-archive:{etch,lenny,squeeze} \
            madworx/multibash \
@@ -11,6 +13,7 @@ for VER in madworx/debian-archive:{etch,lenny,squeeze} \
            opensuse/{leap,tumbleweed} \
            madworx/netbsd:{7.1.2,6.1.5,8.0}-x86_64 ; do
     if [[ "${VER}" = *${REQUESTED}* ]] ; then
+        HAS_RUN=1
         echo "Testing image ${VER}" 1>&2
 
         PP=""
@@ -32,6 +35,7 @@ done
 # Test Alpine Linux, who has special needs:
 for VER in alpine:3.{1,2,3,4,5,6,7,8,9} alpine:edge ; do
     if [[ "${VER}" = *${REQUESTED}* ]] ; then
+        HAS_RUN=1
         echo "Testing image ${VER}" 1>&2
         docker run --rm \
                -v "$(dirname "$(readlink -f "$0")")/..:/docshell" \
@@ -50,6 +54,7 @@ done
 # shellcheck disable=SC2043
 for VER in madworx/minix:latest ; do
     if [[ "${VER}" = *${REQUESTED}* ]] ; then
+        HAS_RUN=1
         echo "Testing image ${VER}" 1>&2
         DID=$(docker run --rm \
                      -d \
@@ -64,3 +69,13 @@ for VER in madworx/minix:latest ; do
         docker stop "${DID}" >/dev/null
     fi
 done
+
+if [[ "osx" = *${REQUESTED}* ]] ; then
+    HAS_RUN=1
+    ./test-shells.sh "osx:notyetknown" ../example.sh
+fi
+
+if [ "${HAS_RUN}" == "0" ] ; then
+    echo "Error: Was not able to match requested os \`${REQUESTED}' to any os/release" 1>&2
+    exit 1
+fi

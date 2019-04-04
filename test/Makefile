@@ -1,14 +1,15 @@
 OS := ${OS}
 DIR := ${DIR}
+SHELL=/bin/bash -o pipefail
 
 all:	tests
 
 check:
 	shellcheck -s ksh *.sh 
-	perl -Mstrict -cw *.pl > /dev/null 
-	perlcritic *.pl > /dev/null
+	perl -Mstrict -cw *.pl
+	perlcritic *.pl
 
-tests: check
+tests:
 	./test-all.sh $(OS) | \
 	./process-test-results.pl 
 
