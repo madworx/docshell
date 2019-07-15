@@ -101,9 +101,9 @@ foreach my $os_category ( natsort keys %oses ) {
             my $str = "";
             foreach my $testedversion( reverse natsort keys %{$oses{$os_category}{$os}{$shell}} ) {
                 if ( $oses{$os_category}{$os}{$shell}{$testedversion} eq 'ok' ) {
-                    $str .= "\x{2713}";
+                    $str .= "\x{2705}";
                 } else {
-                    $str .= "\x{2715}";
+                    $str .= "\x{274c}";
                 }
                 $str .= $testedversion.", ";
             }
