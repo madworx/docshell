@@ -11,7 +11,7 @@ for VER in madworx/debian-archive:{etch,lenny,squeeze} \
            ubuntu:{artful,bionic,trusty,xenial,zesty,yakkety,precise} \
            centos:{6,7} \
            opensuse/{leap,tumbleweed} \
-           madworx/netbsd:{7.1.2,6.1.5,8.0}-x86_64 ; do
+           madworx/netbsd:{7.1.2,6.1.5,8.0,8.1}-x86_64 ; do
     if [[ "${VER}" = *${REQUESTED}* ]] ; then
         HAS_RUN=1
         echo "Testing image ${VER}" 1>&2
