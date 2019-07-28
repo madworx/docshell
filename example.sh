@@ -38,7 +38,6 @@ NAN_COUNT="10"
 program_path="$0"
 usage() {
     export PROGNAME="${program_path##*/}"
-    #export PROGPADD="${PROGNAME//?/ }"
     PROGPADD="$(echo "${PROGNAME}" | sed 's#.# #g')"
     export PROGPADD
     (echo "cat <<EOT"
