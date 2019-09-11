@@ -16,6 +16,8 @@ env:
 
 matrix:
   exclude:
+    - os: linux
+      env: OS=osx
     - os: osx
       env: OS=netbsd
     - os: osx
@@ -32,8 +34,6 @@ matrix:
       env: OS=alpine
     - os: osx
       env: OS=bash
-    - os: linux
-      env: OS=osx
 
 os:
   - linux
