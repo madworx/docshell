@@ -5,9 +5,9 @@ REQUESTED="${1:-}"
 HAS_RUN=0
 
 # Test "regular" docker image-based OS distributions:
-for VER in madworx/debian-archive:{etch,lenny,squeeze} \
+for VER in madworx/debian-archive:{etch,lenny,squeeze,wheezy} \
            madworx/multibash \
-           debian:{buster,jessie,sid,stretch,wheezy,bullseye}-slim \
+           debian:{buster,jessie,sid,stretch,bullseye}-slim \
            ubuntu:{artful,bionic,trusty,xenial,zesty,yakkety,precise,disco} \
            centos:{6,7} \
            opensuse/{leap,tumbleweed} \
