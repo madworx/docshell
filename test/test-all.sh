@@ -7,7 +7,7 @@ HAS_RUN=0
 # Test "regular" docker image-based OS distributions:
 for VER in madworx/debian-archive:{etch,lenny,squeeze} \
            madworx/multibash \
-           debian:{buster,jessie,sid,stretch,wheezy}-slim \
+           debian:{buster,jessie,sid,stretch,wheezy,bullseye}-slim \
            ubuntu:{artful,bionic,trusty,xenial,zesty,yakkety,precise} \
            centos:{6,7} \
            opensuse/{leap,tumbleweed} \
