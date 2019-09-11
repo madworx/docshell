@@ -8,7 +8,7 @@ HAS_RUN=0
 for VER in madworx/debian-archive:{etch,lenny,squeeze} \
            madworx/multibash \
            debian:{buster,jessie,sid,stretch,wheezy,bullseye}-slim \
-           ubuntu:{artful,bionic,trusty,xenial,zesty,yakkety,precise} \
+           ubuntu:{artful,bionic,trusty,xenial,zesty,yakkety,precise,disco} \
            centos:{6,7} \
            opensuse/{leap,tumbleweed} \
            madworx/netbsd:{7.1.2,6.1.5,8.0,8.1}-x86_64 ; do
