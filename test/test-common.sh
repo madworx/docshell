@@ -109,8 +109,13 @@ setup_centos() {
     shell_install() {
         yum install -y "$1" >/dev/null 2>&1
     }
+
     shell_version() {
-        yum info "$1" | awk -F' *: *' '$1=="Release"{print $2}'
+        if grep -q 'release 8' /etc/centos-release ; then
+            yum info --installed "$1" | awk -F' *: *' '$1=="Release"{print $2}'
+        else
+            yum info "$1" | awk -F' *: *' '$1=="Release"{print $2}'
+        fi
     }
     
 }
