@@ -112,9 +112,9 @@ setup_centos() {
 
     shell_version() {
         if grep -q 'release 8' /etc/centos-release ; then
-            yum info --installed "$1" | awk -F' *: *' '$1=="Release"{print $2}'
+            yum info --installed "$1" | awk -F' *: *' '$1=="Release"||$1=="Version"{print $2}'
         else
-            yum info "$1" | awk -F' *: *' '$1=="Release"{print $2}'
+            yum info "$1" | awk -F' *: *' '$1=="Release"||$1=="Version"{print $2}'
         fi
     }
     
