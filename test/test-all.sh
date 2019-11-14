@@ -8,8 +8,8 @@ HAS_RUN=0
 for VER in madworx/debian-archive:{etch,lenny,squeeze,wheezy} \
            madworx/multibash \
            debian:{buster,jessie,sid,stretch,bullseye}-slim \
-           ubuntu:{artful,bionic,trusty,xenial,zesty,yakkety,precise,disco} \
-           centos:{6,7} \
+           ubuntu:{artful,bionic,trusty,xenial,zesty,yakkety,precise,disco,eoan,focal} \
+           centos:{6,7,8} \
            opensuse/{leap,tumbleweed} \
            madworx/netbsd:{7.1.2,6.1.5,8.0,8.1}-x86_64 ; do
     if [[ "${VER}" = *${REQUESTED}* ]] ; then
