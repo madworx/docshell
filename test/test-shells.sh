@@ -4,12 +4,11 @@ SHELLS="bash dash ksh loksh mksh pdksh posh yash zsh"
 ARGS="-n 20 -l /proc --help"
 
 set -eE
-#set -x
 
 # shellcheck disable=SC1090
 . "$(dirname "$0")/test-common.sh"
 
-if [ ! -z "$1" ] ; then
+if [ -n "$1" ] ; then
     SUGGESTED_OS="$1"
 fi
 
