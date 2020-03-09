@@ -21,7 +21,7 @@ identify_os() {
 _setup_base() {
     OS_NAME="$1"
     OS_RELEASE="$2"
-    
+
     os_name() {
         echo "${OS_NAME}"
     }
@@ -86,14 +86,14 @@ setup_opensuse() {
 
 setup_debian() {
     _setup_base "${1%:*}" "${1#*:}"
-    
+
     # Perform best-effort update of package list.
     apt-get update >/dev/null 2>&1 || true
 
     shell_install() {
         apt-get -q install --force-yes -y "$1" >/dev/null 2>&1
     }
-    
+
     shell_version() {
         dpkg-query -s "$1" | sed -n "s#^Version: ##p"
     }
@@ -105,19 +105,19 @@ setup_archived_debian() {
 
 setup_centos() {
     _setup_base "${1%:*}" "${1#*:}"
-    
+
     shell_install() {
         yum install -y "$1" >/dev/null 2>&1
     }
 
     shell_version() {
         if grep -q 'release 8' /etc/centos-release ; then
-            yum info --installed "$1" | awk -F' *: *' '$1=="Release"||$1=="Version"{print $2}' | sed 's# #-#g'
+            yum info --installed "$1" | awk -F' *: *' '$1=="Release"||$1=="Version"{print $2}' | tr '[\n]' ' ' | sed -e 's# #-#g' -e 's#-$##'
         else
-            yum info "$1" | awk -F' *: *' '$1=="Release"||$1=="Version"{print $2}' | sed 's# #-#g'
+            yum info "$1" | awk -F' *: *' '$1=="Release"||$1=="Version"{print $2}' | tr '[\n]' ' ' | sed -e 's# #-#g' -e 's#-$##'
         fi
     }
-    
+
 }
 
 setup_multibash() {
