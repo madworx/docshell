@@ -2,14 +2,14 @@ language: perl
 
 env:
   matrix:
-    - OS=osx
     - OS=netbsd
-    - OS=minix
+    - OS=osx
     - OS=ubuntu
     - OS=debian
-    - OS=centos
+    - OS=minix
     - OS=opensuse
     - OS=alpine
+    - OS=centos
     - OS=bash
   global:
     - PATH=${HOME}/.local/bin:${HOME}/perl5/bin:${HOME}/perl5/perlbrew/bin:$PATH
