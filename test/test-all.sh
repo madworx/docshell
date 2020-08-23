@@ -33,7 +33,7 @@ for VER in madworx/debian-archive:{jessie,etch,lenny,squeeze,wheezy} \
 done
 
 # Test Alpine Linux, who has special needs:
-for VER in alpine:3.{1,2,3,4,5,6,7,8,9,10} alpine:edge ; do
+for VER in alpine:3.{1,2,3,4,5,6,7,8,9,10,11,12} alpine:edge ; do
     if [[ "${VER}" = *${REQUESTED}* ]] ; then
         HAS_RUN=1
         echo "Testing image ${VER}" 1>&2
