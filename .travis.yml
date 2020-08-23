@@ -14,35 +14,12 @@ env:
   global:
     - PATH=${HOME}/.local/bin:${HOME}/perl5/bin:${HOME}/perl5/perlbrew/bin:$PATH
 
-matrix:
-  exclude:
-    - os: linux
-      env: OS=osx
-    - os: osx
-      env: OS=netbsd
-    - os: osx
-      env: OS=minix
-    - os: osx
-      env: OS=ubuntu
-    - os: osx
-      env: OS=debian
-    - os: osx
-      env: OS=centos
-    - os: osx
-      env: OS=opensuse
-    - os: osx
-      env: OS=alpine
-    - os: osx
-      env: OS=bash
-
 os:
   - linux
   - osx
 
 perl:
   - "5.22"
-
-sudo: required
 
 services:
   - docker
@@ -67,6 +44,25 @@ stages:
   - Generate report
 
 jobs:
+  exclude:
+    - os: linux
+      env: OS=osx
+    - os: osx
+      env: OS=netbsd
+    - os: osx
+      env: OS=minix
+    - os: osx
+      env: OS=ubuntu
+    - os: osx
+      env: OS=debian
+    - os: osx
+      env: OS=centos
+    - os: osx
+      env: OS=opensuse
+    - os: osx
+      env: OS=alpine
+    - os: osx
+      env: OS=bash
   include:
     - stage: Lint and validate source
       env: OS
@@ -84,3 +80,4 @@ after_success:
 
 after_failure:
   - find /Users/travis/.cpanm -type f | xargs cat
+
